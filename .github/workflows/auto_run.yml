@@ -21,7 +21,7 @@ jobs:
           python-version: "3.9"
 
       - name: 🚀 Run Python Script
-        run: python your_script.py  # 运行你的 Python 代码
+        run: python clash.py  # 运行你的 Python 代码
 
       - name: 🔄 Git Pull, Commit & Push
         run: |
