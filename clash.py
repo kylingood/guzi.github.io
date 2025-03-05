@@ -6,8 +6,7 @@ today = datetime.datetime.now().strftime("%Y/%m/%d")
 year, month, day = today.split("/")
 
 # 获取项目根目录
-root_dir = ''
-project_dir = f'{root_dir}txt'
+project_dir = f'/home/guzi.github.io'
 # 文件存储目录（可修改）
 save_yaml_path = f"{project_dir}/yaml/"
 save_txt_path = f"{project_dir}/txt/"
