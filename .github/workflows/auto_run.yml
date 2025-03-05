@@ -1,44 +1,40 @@
-name: Auto Commit and Push in GitHub Actions
+name: Run Python Every Hour
 
-# 触发工作流的事件，可以根据你的需求进行调整
 on:
-  # 例如，在每次 push 到 main 分支时触发
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: "0 * * * *"  # 每小时运行一次
+  workflow_dispatch:  # 允许手动触发
 
 jobs:
-  auto-commit-push:
+  run-python:
     runs-on: ubuntu-latest
 
     steps:
-      # 检出仓库代码到工作目录
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        # 检出时获取完整的 Git 历史记录，这对于后续的 git 操作是必要的
+      - name: 🛎️ Checkout repository
+        uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      # 执行一些修改文件的操作
-      - name: Modify a file
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+          
+      - name: 📦 Install dependencies
         run: |
-          echo "This is an automatic commit." > example.txt
+          pip install requests  # 安装 requests 库
 
-      # 配置 Git 用户信息，这对于提交是必要的
-      - name: Set Git user information
+      - name: 🚀 Run Python Script
+        run: python clash.py  # 运行你的 Python 代码
+ 
+
+      - name: Commit and Push Changes
         run: |
-          git config --global user.name "GitHub Actions Bot"
+          git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "🤖 Auto commit with updated YAML files" || exit 0  # 没有变更时不提交
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/kylingood/guzi.github.io.git main
 
-      # 提交更改到仓库
-      - name: Commit changes
-        run: |
-          git add example.txt
-          git commit -m "Automatic commit via GitHub Actions"
 
-      # 推送更改到远程仓库
-      # 注意：这里使用了 GITHUB_TOKEN 来进行身份验证，该 token 具有对触发工作流的仓库的写入权限
-      - name: Push changes
-        run: git push origin ${{ github.ref_name }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
