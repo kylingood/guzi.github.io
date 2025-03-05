@@ -40,5 +40,6 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add .
           git commit -m "🤖 Auto commit with updated YAML files" || exit 0  # 如果没有更改，就跳过
-          git push https://github.com/kylingood/guzi.github.io.git main
+          git push https://$PAT_TOKEN@github.com/kylingood/guzi.github.io.git main
+
 
