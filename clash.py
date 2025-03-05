@@ -53,7 +53,7 @@ for i in range(5):
 for i in range(5):
     file_name = f"{i}-{year}{month}{day}.txt"
     url = f"https://node.freeclashnode.com/uploads/{year}/{month}/{file_name}"
-    save_file = os.path.join(save_yaml_path, f"{i}.txt")
+    save_file = os.path.join(save_txt_path, f"{i}.txt")
     try:
         response = requests.get(url, timeout=10)
         response.raise_for_status()  # 检查请求是否成功
@@ -70,7 +70,7 @@ for i in range(5):
 for i in range(5):
     file_name = f"{i}-{year}{month}{day}.txt"
     url = f"https://potatsolite.github.io/uploads/{year}/{month}/{file_name}"
-    save_file = os.path.join(save_yaml_path, f"{i}.txt")
+    save_file = os.path.join(save_txt_path, f"{i}.txt")
 
     try:
         response = requests.get(url, timeout=10)
