@@ -1,6 +1,7 @@
 import os
 import requests
 import datetime
+import pytz  # 添加 pytz
 
 # 获取当前脚本所在目录（GitHub Actions 里会是仓库根目录）
 project_dir = os.path.dirname(os.path.abspath(__file__))
@@ -10,9 +11,10 @@ save_yaml_path = os.path.join(project_dir, "yaml")
 save_txt_path = os.path.join(project_dir, "txt")
 os.makedirs(save_yaml_path, exist_ok=True)  # 创建 yaml 文件夹
 # 生成当前日期
-today = datetime.datetime.now().strftime("%Y/%m/%d")
+# 设置时区为北京时间（UTC+8）
+beijing_tz = pytz.timezone('Asia/Shanghai')
+today = datetime.datetime.now(beijing_tz).strftime("%Y/%m/%d")
 year, month, day = today.split("/")
-
 
 # 遍历 0-4 生成文件名
 for i in range(5):
