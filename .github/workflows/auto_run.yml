@@ -27,11 +27,12 @@ jobs:
       - name: 🚀 Run Python Script
         run: python clash.py  # 运行你的 Python 代码
 
-      - name: 🔄 Git Pull, Commit & Push
+      - name: Commit and Push Changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git pull --rebase  # 拉取最新代码
           git add .
-          git commit -m "Auto commit" || exit 0  # 如果没有变更，不提交
-          git push
+          git commit -m "🤖 Auto commit with updated YAML files" || exit 0  # 如果没有更改，就跳过
+          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/kylingood/guzi.github.io.git main
+          
+     
