@@ -1,0 +1,33 @@
+name: Run Python Every Hour
+
+on:
+  schedule:
+    - cron: "0 * * * *"  # 每小时运行一次
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  run-python:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛎️ Checkout repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: 🚀 Run Python Script
+        run: python your_script.py  # 运行你的 Python 代码
+
+      - name: 🔄 Git Pull, Commit & Push
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase  # 拉取最新代码
+          git add .
+          git commit -m "Auto commit" || exit 0  # 如果没有变更，不提交
+          git push
