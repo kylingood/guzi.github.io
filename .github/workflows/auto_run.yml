@@ -23,6 +23,7 @@ jobs:
       - name: 📦 Install dependencies
         run: |
           pip install requests  # 安装 requests 库
+          pip install pytz  # 安装 pytz 库
 
       - name: 🚀 Run Python Script
         run: python clash.py  # 运行你的 Python 代码
