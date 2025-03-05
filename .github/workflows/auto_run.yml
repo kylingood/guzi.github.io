@@ -1,40 +1,44 @@
-name: Run Python Every Hour
+name: Auto Commit and Push
 
+# 触发工作流的事件，这里设置为在 push 到 main 分支时触发
 on:
-  schedule:
-    - cron: "0 * * * *"  # 每小时运行一次
-  workflow_dispatch:  # 允许手动触发
+  push:
+    branches:
+      - main
 
 jobs:
-  run-python:
+  auto-commit-push:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🛎️ Checkout repository
-        uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+      # 检出仓库代码
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: 🐍 Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.9"
-          
-      - name: 📦 Install dependencies
-        run: |
-          pip install requests  # 安装 requests 库
+      # 执行一些操作，比如修改文件（这里只是示例，没有实际修改）
+      # - name: Modify files
+      #   run: echo "Some changes" >> example.txt
 
-      - name: 🚀 Run Python Script
-        run: python clash.py  # 运行你的 Python 代码
- 
-
-      - name: Commit and Push Changes
+      # 配置 Git 用户信息
+      - name: Set Git user information
         run: |
           git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "🤖 Auto commit with updated YAML files" || exit 0  # 没有变更时不提交
-          git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/kylingood/guzi.github.io.git main
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-
-
+      # 检查是否有文件更改，如果有则提交并推送
+      - name: Commit and Push changes if any
+        run: |
+          # 检查是否有未提交的更改
+          changes=$(git status --porcelain)
+          
+          # 如果有更改，则提交并推送
+          if [ -n "$changes" ]; then
+            git add .
+            git commit -m "🤖 Auto commit with updated files"
+            git push origin ${{ github.ref_name }}
+          else
+            echo "No changes to commit"
+          fi
+        # 使用 GitHub 提供的 GITHUB_TOKEN 进行身份验证
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
