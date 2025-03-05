@@ -27,6 +27,9 @@ jobs:
       - name: 🚀 Run Python Script
         run: python clash.py  # 运行你的 Python 代码
 
+      - name: Show GitHub Token
+        run: echo "Token: ${{ secrets.GITHUB_TOKEN }}"
+
       - name: Commit and Push Changes
         run: |
           git config --global user.name "github-actions[bot]"
