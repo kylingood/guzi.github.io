@@ -27,7 +27,13 @@ jobs:
       - name: 🚀 Run Python Script
         run: python clash.py  # 运行你的 Python 代码
         
-    
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
       - name: Commit and Push Changes
         run: |
           git config --global user.name "github-actions[bot]"
