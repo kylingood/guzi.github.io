@@ -1,7 +1,8 @@
-name: Auto Commit and Push
+name: Auto Commit and Push in GitHub Actions
 
-# 触发工作流的事件，这里设置为在 push 到 main 分支时触发
+# 触发工作流的事件，可以根据你的需求进行调整
 on:
+  # 例如，在每次 push 到 main 分支时触发
   push:
     branches:
       - main
@@ -11,34 +12,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 检出仓库代码
+      # 检出仓库代码到工作目录
       - name: Checkout repository
         uses: actions/checkout@v2
+        # 检出时获取完整的 Git 历史记录，这对于后续的 git 操作是必要的
+        with:
+          fetch-depth: 0
 
-      # 执行一些操作，比如修改文件（这里只是示例，没有实际修改）
-      # - name: Modify files
-      #   run: echo "Some changes" >> example.txt
+      # 执行一些修改文件的操作
+      - name: Modify a file
+        run: |
+          echo "This is an automatic commit." > example.txt
 
-      # 配置 Git 用户信息
+      # 配置 Git 用户信息，这对于提交是必要的
       - name: Set Git user information
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      # 检查是否有文件更改，如果有则提交并推送
-      - name: Commit and Push changes if any
+      # 提交更改到仓库
+      - name: Commit changes
         run: |
-          # 检查是否有未提交的更改
-          changes=$(git status --porcelain)
-          
-          # 如果有更改，则提交并推送
-          if [ -n "$changes" ]; then
-            git add .
-            git commit -m "🤖 Auto commit with updated files"
-            git push origin ${{ github.ref_name }}
-          else
-            echo "No changes to commit"
-          fi
-        # 使用 GitHub 提供的 GITHUB_TOKEN 进行身份验证
+          git add example.txt
+          git commit -m "Automatic commit via GitHub Actions"
+
+      # 推送更改到远程仓库
+      # 注意：这里使用了 GITHUB_TOKEN 来进行身份验证，该 token 具有对触发工作流的仓库的写入权限
+      - name: Push changes
+        run: git push origin ${{ github.ref_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
